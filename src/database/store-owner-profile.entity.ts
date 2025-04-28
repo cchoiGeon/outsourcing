@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './users.entity';
-import { StoreCategory } from 'src/common/enum/store-category.enum';
 
 @Entity('store_owner_profiles')
 export class StoreOwnerProfile {
@@ -16,8 +15,8 @@ export class StoreOwnerProfile {
   @Column()
   storeAddress: string;
 
-  @Column({ type: 'enum', enum: StoreCategory, default: StoreCategory.OTHER })
-  storeCategory: StoreCategory;
+  @Column()
+  storeCategory: string;
 
   @Column({ nullable: true })
   storePhoneNumber: string;

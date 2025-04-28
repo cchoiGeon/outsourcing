@@ -56,9 +56,9 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('이메일 또는 비밀번호가 일치하지 않습니다.');
     }
-
+    
     // JWT 토큰 생성
-    const accessToken = this.jwtService.sign({ uuid: user.uuid, role: user.role });
+    const accessToken = this.jwtService.sign({ uuid: user.uuid, role: user.isAdmin ? 'ADMIN' :user.role, admin: user.isAdmin });
 
     return { accessToken };
   }
