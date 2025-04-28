@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './api/user/user.module';
 import { AwsModule } from './api/aws/aws.module';
+import { InventoryModule } from './api/inventory/inventory.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { AwsModule } from './api/aws/aws.module';
     AuthModule, 
     JwtModule, 
     LoggerModule, 
-    UserModule, AwsModule
+    UserModule, AwsModule, InventoryModule
   ],
 })
 export class AppModule {}

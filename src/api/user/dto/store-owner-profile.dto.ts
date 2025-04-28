@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { StoreCategory } from 'src/common/enum/store-category.enum';
 
 export class StoreOwnerProfileDto {
   @IsString()
@@ -17,9 +18,9 @@ export class StoreOwnerProfileDto {
   @IsNotEmpty()
   storeAddress: string;
 
-  @IsString()
+  @IsEnum(StoreCategory)
   @IsNotEmpty()
-  storeCategory: string;
+  storeCategory: StoreCategory;
 
   @IsString()
   @IsOptional()

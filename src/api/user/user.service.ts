@@ -5,6 +5,7 @@ import { User } from '../../database/users.entity';
 import { UserProfile } from '../../database/user-profile.entity';
 import { StoreOwnerProfile } from '../../database/store-owner-profile.entity';
 import { Store } from '../../database/store.entity';
+import { Category } from '../../database/category.entity';
 import { CustomerProfileDto } from './dto/customer-profile.dto';
 import { StoreOwnerProfileDto } from './dto/store-owner-profile.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
@@ -23,6 +24,8 @@ export class UserService {
     private readonly storeOwnerProfileRepository: Repository<StoreOwnerProfile>,
     @InjectRepository(Store)
     private readonly storeRepository: Repository<Store>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
     private readonly awsService: AwsService,
   ) {}
 
@@ -49,12 +52,17 @@ export class UserService {
       throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
 
+    const category = await this.categoryRepository.findOne({ where: { categoryName: dto.storeCategory } });
+    if (!category) {
+      throw new NotFoundException('해당 카테고리를 찾을 수 없습니다.');
+    }
+
     const [ verificationPhoto ] = await this.awsService.uploadImagesToS3(file, 'jpg');
 
     const store = this.storeRepository.create({
       name: dto.storeName,
       address: dto.storeAddress,
-      category: dto.storeCategory,
+      category: category,
       phoneNumber: dto.storePhoneNumber,  
       verificationPhoto: verificationPhoto,
       verificationStatus: VerificationStatus.PENDING,

@@ -7,9 +7,10 @@ import { UserProfile } from '../../database/user-profile.entity';
 import { StoreOwnerProfile } from '../../database/store-owner-profile.entity';
 import { Store } from 'src/database/store.entity';
 import { AwsModule } from '../aws/aws.module';
+import { Category } from 'src/database/category.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, UserProfile, StoreOwnerProfile, Store]),
+    TypeOrmModule.forFeature([User, UserProfile, StoreOwnerProfile, Store, Category]),
     AwsModule,
   ],
   controllers: [UserController],

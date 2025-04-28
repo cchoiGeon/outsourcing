@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { VerificationStatus } from 'src/common/enum/status.enum';
+import { Category } from './category.entity';
 
 @Entity('stores')
 export class Store {
@@ -12,8 +13,9 @@ export class Store {
   @Column()
   address: string;
 
-  @Column()
-  category: string;
+  @ManyToOne(() => Category, { nullable: false, onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
+  category: Category;
 
   @Column({ nullable: true })
   phoneNumber?: string;
