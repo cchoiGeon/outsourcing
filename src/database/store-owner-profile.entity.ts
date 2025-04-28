@@ -17,13 +17,13 @@ export class StoreOwnerProfile {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn({ name: 'store_id', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'storeId', referencedColumnName: 'id' })
   store: Store;
 
   @OneToOne(() => User, { 
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn({ name: 'uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'uuid' })
   user: User;
 } 

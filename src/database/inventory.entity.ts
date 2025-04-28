@@ -4,7 +4,7 @@ import { Store } from './store.entity';
 @Entity('inventories')
 export class Inventory {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @ManyToOne(() => Store, { nullable: false, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'storeId', referencedColumnName: 'id' })

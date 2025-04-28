@@ -16,6 +16,6 @@ export class UserProfile {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-  @JoinColumn({ name: 'uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'uuid' })
   user: User;
 } 
