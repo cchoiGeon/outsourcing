@@ -10,7 +10,7 @@ export class UserProfile {
   name: string;
 
   @Column({ nullable: true })
-  phoneNumber: string;
+  phoneNumber?: string;
 
   @OneToOne(() => User, { 
     onDelete: 'CASCADE',

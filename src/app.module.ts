@@ -4,9 +4,14 @@ import { JwtModule } from './api/jwt/jwt.module';
 import { LoggerModule } from './api/logger/logger.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './api/user/user.module';
+import { AwsModule } from './api/aws/aws.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -17,13 +22,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [__dirname + '/database/entity/*.entity.{ts,js}'],
-        synchronize: false,
+        entities: [__dirname + '/database/*.entity.{ts,js}'],
+        synchronize: true,
       }),
     }),
     AuthModule, 
     JwtModule, 
-    LoggerModule
+    LoggerModule, 
+    UserModule, AwsModule
   ],
 })
 export class AppModule {}

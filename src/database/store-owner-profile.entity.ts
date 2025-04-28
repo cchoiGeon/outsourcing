@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from './users.entity';
+import { Store } from './store.entity';
 
 @Entity('store_owner_profiles')
 export class StoreOwnerProfile {
@@ -9,27 +10,15 @@ export class StoreOwnerProfile {
   @Column()
   name: string;
 
-  @Column()
-  storeName: string;
-
-  @Column()
-  storeAddress: string;
-
-  @Column()
-  storeCategory: string;
-
   @Column({ nullable: true })
-  storePhoneNumber: string;
+  phoneNumber?: string;
 
-  @Column({ nullable: true })
-  verificationPhoto: string;
-
-  @Column({ 
-    type: 'enum', 
-    enum: VerificationStatus, 
-    default: VerificationStatus.PENDING 
+  @OneToOne(() => Store, { 
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   })
-  verificationStatus: VerificationStatus;
+  @JoinColumn({ name: 'store_id', referencedColumnName: 'id' })
+  store: Store;
 
   @OneToOne(() => User, { 
     onDelete: 'CASCADE',

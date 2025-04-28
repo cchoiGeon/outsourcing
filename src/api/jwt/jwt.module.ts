@@ -10,7 +10,6 @@ import { User } from '../../database/users.entity.js';
 @Global()
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     NestJsJwtModule.registerAsync({
