@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inventory } from 'src/database/inventory.entity';
 import { StoreOwnerProfile } from 'src/database/store-owner-profile.entity';
 import { Store } from 'src/database/store.entity';
-
+import { AwsModule } from '../aws/aws.module';
 @Module({
-  imports: [TypeOrmModule.forFeature([Inventory, StoreOwnerProfile, Store])],
+  imports: [TypeOrmModule.forFeature([Inventory, StoreOwnerProfile, Store]), AwsModule],
   controllers: [InventoryController],
   providers: [InventoryService]
 })

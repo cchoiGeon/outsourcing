@@ -26,7 +26,10 @@ export class Inventory {
   imageUrl?: string; // 상품 사진 URL
 
   @Column()
-  availableTime: Date; // 판매 마감 시간
+  startTime: Date; // 판매 시작 시간
+
+  @Column()
+  endTime: Date; // 판매 마감 시간
 
   @CreateDateColumn()
   createdAt: Date;

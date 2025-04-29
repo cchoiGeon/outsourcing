@@ -27,7 +27,11 @@ export class CreateInventoryDto {
 
   @IsString()
   @IsNotEmpty()
-  availableTime: string; // ISO 문자열로 받음
+  startTime: string; // ISO 문자열로 받음
+
+  @IsString()
+  @IsNotEmpty()
+  endTime: string; // ISO 문자열로 받음
 
   @IsNumber()
   @IsNotEmpty()

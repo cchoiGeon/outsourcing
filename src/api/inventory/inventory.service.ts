@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inventory } from 'src/database/inventory.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { Store } from 'src/database/store.entity';
 import { VerificationStatus } from 'src/common/enum/status.enum';
+import { AwsService } from '../aws/aws.service';
 
 @Injectable()
 export class InventoryService {
@@ -13,9 +14,10 @@ export class InventoryService {
     private readonly inventoryRepository: Repository<Inventory>,
     @InjectRepository(Store)
     private readonly storeRepository: Repository<Store>,
+    private readonly awsService: AwsService,
   ) {}
 
-  async createInventory(dto: CreateInventoryDto) {
+  async createInventory(dto: CreateInventoryDto, file?: Express.Multer.File) {
     const store = await this.storeRepository.findOne({ where: { id: dto.storeId } });
     if (!store) {
       throw new NotFoundException('Store not found');
@@ -25,8 +27,13 @@ export class InventoryService {
       throw new BadRequestException('Store is not approved');
     }
 
+    if (file) { 
+      const [ imageUrl ] = await this.awsService.uploadImagesToS3(file, 'jpg');
+      dto.imageUrl = imageUrl;
+    }
+
     const inventory = this.inventoryRepository.create({
-      ...dto, 
+      ...dto,
       store: store,
     });
 
@@ -35,7 +42,12 @@ export class InventoryService {
   }
 
   async getAllInventory() {
-    const inventory = await this.inventoryRepository.find({ where: { store: { verificationStatus: VerificationStatus.APPROVED } } , relations: ['store'] });
+    const inventory = await this.inventoryRepository.find({ 
+      where: { 
+        endTime: MoreThan(new Date()) // 현재 시간보다 더 나중에 끝나는 것들
+      }, 
+      relations: ['store'] 
+    });
     return inventory;
   }
 
