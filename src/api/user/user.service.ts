@@ -106,4 +106,18 @@ export class UserService {
       phoneNumber: profile?.phoneNumber ?? null,
     };
   }
+
+  async getStoreOwnerStoreInfo(uuid: string) {
+    const storeOwnerProfile = await this.storeOwnerProfileRepository.findOne({ where: { user: { uuid: uuid } }, relations: ['store'] });
+    if (!storeOwnerProfile) {
+      throw new NotFoundException('Store owner profile not found');
+    }
+
+    const store = await this.storeRepository.findOne({ where: { id: storeOwnerProfile.store.id } });
+    if (!store) {
+      throw new NotFoundException('Store not found');
+    }
+
+    return store;
+  }
 }

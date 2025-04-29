@@ -46,4 +46,10 @@ export class UserController {
   async getProfileStatus(@GetUser() user) {
     return await this.userService.getProfileStatus(user.uuid);
   }
+
+  @Get('store')
+  @CheckRole(Role.STORE_OWNER)
+  async getStoreOwnerStoreInfo(@GetUser() user) {
+    return await this.userService.getStoreOwnerStoreInfo(user.uuid);
+  }
 }

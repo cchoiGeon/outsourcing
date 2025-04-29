@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './api/user/user.module';
 import { AwsModule } from './api/aws/aws.module';
 import { InventoryModule } from './api/inventory/inventory.module';
+import { ReservationModule } from './api/reservation/reservation.module';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { InventoryModule } from './api/inventory/inventory.module';
     AuthModule, 
     JwtModule, 
     LoggerModule, 
-    UserModule, AwsModule, InventoryModule
+    UserModule, AwsModule, InventoryModule, ReservationModule
   ],
 })
 export class AppModule {}
