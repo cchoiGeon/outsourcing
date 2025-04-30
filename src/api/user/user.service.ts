@@ -113,7 +113,7 @@ export class UserService {
       throw new NotFoundException('Store owner profile not found');
     }
 
-    const store = await this.storeRepository.findOne({ where: { id: storeOwnerProfile.store.id } });
+    const store = await this.storeRepository.findOne({ where: { id: storeOwnerProfile.store.id } , relations: ['category']});
     if (!store) {
       throw new NotFoundException('Store not found');
     }
