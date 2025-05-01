@@ -1,6 +1,6 @@
 import { Role } from 'src/common/enum/role.enum';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
-import { UserProfile } from './user-profile.entity';
+import { StoreOwnerProfile } from './store-owner-profile.entity';
 
 @Entity('users')
 export class User {
@@ -13,8 +13,11 @@ export class User {
   @Column()
   password: string;
 
-  @OneToOne(() => UserProfile, (profile) => profile.user)
-  profile: UserProfile;  // 추가된 부분
+  @Column()
+  name: string;
+
+  @Column()
+  phoneNumber: string;
 
   @Column({ type: 'enum', enum: Role, default: Role.CUSTOMER })
   role: Role;
@@ -27,4 +30,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => StoreOwnerProfile, (profile) => profile.user)
+  storeOwnerProfile: StoreOwnerProfile;
 } 

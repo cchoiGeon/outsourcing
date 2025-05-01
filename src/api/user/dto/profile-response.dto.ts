@@ -4,6 +4,5 @@ export class ProfileResponseDto {
   name: string;
   email: string;
   phoneNumber: string;
-  hasProfile: boolean;
   role: Role;
 }

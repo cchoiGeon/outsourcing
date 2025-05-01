@@ -6,7 +6,7 @@ import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { Role } from 'src/common/enum/role.enum';
 import { CheckRole } from 'src/common/deco/check-role.deco';
 import { FileInterceptor } from '@nestjs/platform-express';
-
+import { GetUser } from 'src/common/deco/get-user.deco';
 @Controller('inventory')
 @UseGuards(JwtAuthGuard, RoleGuard)
 export class InventoryController {
@@ -26,6 +26,11 @@ export class InventoryController {
     file?: Express.Multer.File,
   ) {
     return await this.inventoryService.createInventory(dto, file);
+  }
+
+  @Get('/')
+  async getTodayInventory() {
+    return await this.inventoryService.getTodayInventory();
   }
 
   @Get('/:inventId')

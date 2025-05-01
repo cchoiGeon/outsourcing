@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { Category } from './category.entity';
 import { Inventory } from './inventory.entity';
-import { StoreInfo } from './store-info.entity';
 
 @Entity('stores')
 export class Store {
@@ -17,6 +16,15 @@ export class Store {
 
   @Column({ nullable: true })
   imageUrl?: string;
+
+  @Column({ type: 'double' })
+  lat: number;
+
+  @Column({ type: 'double' })
+  lng: number;
+
+  @Column()
+  storeInfo: string;
 
   @ManyToOne(() => Category, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
@@ -37,7 +45,4 @@ export class Store {
 
   @OneToMany(() => Inventory, inventory => inventory.store)
   inventories: Inventory[];
-
-  @OneToOne(() => StoreInfo, storeInfo => storeInfo.store)
-  storeInfo: StoreInfo;
 } 

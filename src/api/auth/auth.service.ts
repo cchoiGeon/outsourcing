@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<{ accessToken: string }> {
-    const { email, password, role } = signUpDto;
+    const { email, password, role, name, phoneNumber } = signUpDto;
 
     // 이메일 중복 체크
     const existingUser = await this.userRepository.findOne({ where: { email } });
@@ -32,6 +32,8 @@ export class AuthService {
       email,
       password: hashedPassword,
       role,
+      name,
+      phoneNumber,
     });
 
     await this.userRepository.save(user);

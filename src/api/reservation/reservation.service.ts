@@ -72,7 +72,7 @@ export class ReservationService {
   
     return result.map((reservation) => ({
       id: reservation.id,
-      userName: reservation.user.profile?.name ?? '이름 없음',
+      userName: reservation.user.name,
       amount: reservation.amount,
       pickUpTime: reservation.pickUpTime,
       status: reservation.status,
