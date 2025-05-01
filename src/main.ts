@@ -10,6 +10,6 @@ async function bootstrap() {
   app.useGlobalPipes(new CustomValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter(logger));
   app.setGlobalPrefix('v1/api');
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(80);
 }
 bootstrap();
