@@ -28,11 +28,6 @@ export class InventoryController {
     return await this.inventoryService.createInventory(dto, file);
   }
 
-  @Get('/')
-  async getAllInventory() {
-    return await this.inventoryService.getAllInventory();
-  }
-
   @Get('/:inventId')
   async getInventoryByInventId(@Param('inventId') inventId: number) {
     return await this.inventoryService.getInventoryByInventId(inventId);

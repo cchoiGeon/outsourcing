@@ -41,16 +41,6 @@ export class InventoryService {
     return await this.inventoryRepository.save(inventory);  
   }
 
-  async getAllInventory() {
-    const inventory = await this.inventoryRepository.find({ 
-      where: { 
-        endTime: MoreThan(new Date()) // 현재 시간보다 더 나중에 끝나는 것들
-      }, 
-      relations: ['store'] 
-    });
-    return inventory;
-  }
-
   async getInventoryByInventId(inventId: number) {
     const inventory = await this.inventoryRepository.findOne({ where: { id: inventId } , relations: ['store'] });
     if (!inventory) {

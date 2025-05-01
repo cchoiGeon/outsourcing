@@ -8,6 +8,7 @@ import { UserModule } from './api/user/user.module';
 import { AwsModule } from './api/aws/aws.module';
 import { InventoryModule } from './api/inventory/inventory.module';
 import { ReservationModule } from './api/reservation/reservation.module';
+import { StoreModule } from './api/store/store.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { ReservationModule } from './api/reservation/reservation.module';
     AuthModule, 
     JwtModule, 
     LoggerModule, 
-    UserModule, AwsModule, InventoryModule, ReservationModule
+    UserModule, AwsModule, InventoryModule, ReservationModule,
+    StoreModule
   ],
 })
 export class AppModule {}
