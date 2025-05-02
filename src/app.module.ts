@@ -9,6 +9,7 @@ import { AwsModule } from './api/aws/aws.module';
 import { InventoryModule } from './api/inventory/inventory.module';
 import { ReservationModule } from './api/reservation/reservation.module';
 import { StoreModule } from './api/store/store.module';
+import { NotificationModule } from './api/notification/notification.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { StoreModule } from './api/store/store.module';
     JwtModule, 
     LoggerModule, 
     UserModule, AwsModule, InventoryModule, ReservationModule,
-    StoreModule
+    StoreModule,
+    NotificationModule
   ],
 })
 export class AppModule {}

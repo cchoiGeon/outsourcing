@@ -6,6 +6,9 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { StoreOwnerProfile } from 'src/database/store-owner-profile.entity';
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto';
+import { Notification } from 'src/database/notification.entity';
+import { Inventory } from 'src/database/inventory.entity';
+
 @Injectable()
 export class ReservationService {
   constructor(
@@ -13,14 +16,30 @@ export class ReservationService {
     private readonly reservationRepository: Repository<Reservation>,
     @InjectRepository(StoreOwnerProfile)
     private readonly storeOwnerProfileRepository: Repository<StoreOwnerProfile>,
+    @InjectRepository(Notification)
+    private readonly notificationRepository: Repository<Notification>,
+    @InjectRepository(Inventory)
+    private readonly inventoryRepository: Repository<Inventory>,
   ) {}
 
   async createReservation(dto: CreateReservationDto, userUuid: string) {
+    const inventory = await this.inventoryRepository.findOne({ where: { id: dto.inventoryId } , relations: ['store.storeOwnerProfiles.user']}); 
+    const storeOwnerUuid = inventory.store.storeOwnerProfiles[0].user.uuid;
+  
     const reservation = this.reservationRepository.create({
       ...dto,
       inventory: { id: dto.inventoryId },
       user: { uuid: userUuid },
     });
+  
+    const notification = this.notificationRepository.create({
+      title: '예약 요청이 왔습니다.',
+      content: '예약 요청이 왔습니다.',
+      user: { uuid: storeOwnerUuid },
+    });
+
+    await this.notificationRepository.save(notification);
+
     return await this.reservationRepository.save(reservation);
   }
 

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { Category } from './category.entity';
 import { Inventory } from './inventory.entity';
+import { StoreOwnerProfile } from './store-owner-profile.entity';
 
 @Entity('stores')
 export class Store {
@@ -26,10 +27,6 @@ export class Store {
   @Column()
   storeInfo: string;
 
-  @ManyToOne(() => Category, { nullable: false, onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
-  category: Category;
-
   @Column({ nullable: true })
   phoneNumber?: string;
 
@@ -45,4 +42,11 @@ export class Store {
 
   @OneToMany(() => Inventory, inventory => inventory.store)
   inventories: Inventory[];
+
+  @ManyToOne(() => Category, { nullable: false, onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
+  category: Category;
+
+  @OneToMany(() => StoreOwnerProfile, (storeOwnerProfile) => storeOwnerProfile.store)
+  storeOwnerProfiles: StoreOwnerProfile[];
 } 
