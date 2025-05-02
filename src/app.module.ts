@@ -27,7 +27,7 @@ import { NotificationModule } from './api/notification/notification.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/database/*.entity.{ts,js}'],
-        synchronize: true,
+        synchronize: false,
       }),
     }),
     AuthModule, 
