@@ -1,7 +1,7 @@
-import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty } from 'class-validator';
-import { Role } from 'src/common/enum/role.enum';
+import { IsEmail, IsString, MinLength, IsNotEmpty, ValidateNested, IsObject, IsNumber} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class SignUpDto {
+export class CustomerSignUpDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -17,6 +17,55 @@ export class SignUpDto {
   @MinLength(6)
   password: string;
 
-  @IsEnum(Role)
-  role: Role;
+  @IsString()
+  @IsNotEmpty()
+  university: string;
 } 
+
+class StoreDto {
+  @IsString()
+  @IsNotEmpty()
+  storeName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  storeAddress: string;
+
+  @IsString()
+  @IsNotEmpty()
+  storePhoneNumber: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  storeCategory: number;
+
+  @IsString()
+  @IsNotEmpty()
+  storeInfo: string;
+
+  @IsString()
+  @IsNotEmpty()
+  storePickupTime: string;
+}
+
+export class StoreOwnerSignUpDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString() 
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(6)
+  password: string;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => StoreDto)
+  store: StoreDto;
+}

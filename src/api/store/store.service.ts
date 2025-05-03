@@ -13,9 +13,6 @@ export class StoreService {
   async getAllStores() {
     const stores = await this.storeRepository.find({
       relations: ['category'],
-      order: {
-        id: 'ASC',
-      },
     });
 
     return stores.map(store => ({
@@ -33,7 +30,7 @@ export class StoreService {
   async getStoreById(id: number) {
     const store = await this.storeRepository.findOne({
       where: { id },
-      relations: ['category', 'inventories', 'storeInfo'],
+      relations: ['category', 'inventories'],
     });
 
     if (!store) {
@@ -60,6 +57,7 @@ export class StoreService {
           endTime: inventory.endTime,
         })),
       storeInfo: store.storeInfo,
+      storePickupTime: store.storePickupTime,
     };
   }
 }

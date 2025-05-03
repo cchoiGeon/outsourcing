@@ -1,10 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class CreateInventoryDto {
-  @IsNumber()
-  @IsNotEmpty()
-  storeId: number;
-
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -32,8 +28,4 @@ export class CreateInventoryDto {
   @IsString()
   @IsNotEmpty()
   endTime: string; // ISO 문자열로 받음
-
-  @IsNumber()
-  @IsNotEmpty()
-  categoryId: number;
 } 

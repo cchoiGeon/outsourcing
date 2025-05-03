@@ -6,6 +6,7 @@ import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { Store } from 'src/database/store.entity';
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { AwsService } from '../aws/aws.service';
+import { StoreOwnerProfile } from 'src/database/store-owner-profile.entity';
 
 @Injectable()
 export class InventoryService {
@@ -14,11 +15,18 @@ export class InventoryService {
     private readonly inventoryRepository: Repository<Inventory>,
     @InjectRepository(Store)
     private readonly storeRepository: Repository<Store>,
+    @InjectRepository(StoreOwnerProfile)
+    private readonly storeOwnerProfileRepository: Repository<StoreOwnerProfile>,
     private readonly awsService: AwsService,
   ) {}
 
-  async createInventory(dto: CreateInventoryDto, file?: Express.Multer.File) {
-    const store = await this.storeRepository.findOne({ where: { id: dto.storeId } });
+  async createInventory( uuid: string, dto: CreateInventoryDto, file?: Express.Multer.File) {
+    const user = await this.storeOwnerProfileRepository.findOne({ where: { user: { uuid: uuid } }, relations: ['store'] });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const store = await this.storeRepository.findOne({ where: { id: user.store.id } });
     if (!store) {
       throw new NotFoundException('Store not found');
     }
@@ -34,9 +42,8 @@ export class InventoryService {
 
     const inventory = this.inventoryRepository.create({
       ...dto,
-      store: store,
+      store: store
     });
-
 
     return await this.inventoryRepository.save(inventory);  
   }
@@ -55,10 +62,16 @@ export class InventoryService {
   }
 
   async getInventoryByInventId(inventId: number) {
-    const inventory = await this.inventoryRepository.findOne({ where: { id: inventId } , relations: ['store'] });
+    const inventory = await this.inventoryRepository.findOne({ where: { id: inventId } , relations: ['store', 'store.category'] });
     if (!inventory) {
       throw new NotFoundException('Inventory not found');
-    } 
+    }
+
+    const now = new Date();
+    if (inventory.endTime < now) {
+      throw new BadRequestException('해당 상품의 판매 기간이 종료되었습니다.');
+    }
+
     return inventory;
   }
 }

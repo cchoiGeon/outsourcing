@@ -26,6 +26,9 @@ export class Store {
 
   @Column()
   storeInfo: string;
+  
+  @Column()
+  storePickupTime: string;
 
   @Column({ nullable: true })
   phoneNumber?: string;

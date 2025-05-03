@@ -15,7 +15,7 @@ export class InventoryController {
   @Post('/')
   @CheckRole(Role.STORE_OWNER)
   @UseInterceptors(FileInterceptor('file'))
-  async createInventory(@Body() dto: CreateInventoryDto, @UploadedFile( 
+  async createInventory(@Body() dto: CreateInventoryDto, @GetUser() user, @UploadedFile( 
     new ParseFilePipe({
       fileIsRequired: false,
       validators: [
@@ -25,7 +25,7 @@ export class InventoryController {
     }))
     file?: Express.Multer.File,
   ) {
-    return await this.inventoryService.createInventory(dto, file);
+    return await this.inventoryService.createInventory(user.uuid, dto, file);
   }
 
   @Get('/')

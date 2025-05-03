@@ -5,10 +5,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../../database/users.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Store } from 'src/database/store.entity';
+import { StoreOwnerProfile } from 'src/database/store-owner-profile.entity';
+import { AwsModule } from '../aws/aws.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Store, StoreOwnerProfile]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -17,6 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    AwsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

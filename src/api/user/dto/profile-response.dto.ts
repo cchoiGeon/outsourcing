@@ -5,4 +5,5 @@ export class ProfileResponseDto {
   email: string;
   phoneNumber: string;
   role: Role;
+  university: string;
 }

@@ -1,36 +1,26 @@
-import { Controller, Post, Body, Get, UseGuards, Req, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GetUser } from 'src/common/deco/get-user.deco';
 import { JwtAuthGuard } from '../jwt/jwt-auth.guard';
 import { RoleGuard } from 'src/common/guard/role.guard';
+import { UpdatePasswordDto, UpdateUserDto } from './dto/update-profile.dto';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard, RoleGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-
-  // @Post('profile/store-owner')
-  // @CheckRole(Role.STORE_OWNER)
-  // @UseInterceptors(FileInterceptor('file'))
-  // async createStoreOwnerProfile(
-  //   @GetUser() user,
-  //   @Body() dto: StoreOwnerProfileDto,
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [
-  //         new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB 제한
-  //         new FileTypeValidator({ fileType: /image\/(jpg|jpeg|png)/ }), // ✅ jpg, jpeg, png 허용
-  //       ],
-  //     }),
-  //   )
-  //   file: Express.Multer.File,
-  // ) {
-  //   return await this.userService.createStoreOwnerProfile(user.uuid, dto, file);
-  // }
-
   @Get('profile')
   async getProfileStatus(@GetUser() user) {
     return await this.userService.getProfileStatus(user.uuid);
+  }
+  @Patch('profile')
+  async updateProfile(@GetUser() user, @Body() dto: UpdateUserDto) {
+    return await this.userService.updateProfile(user.uuid, dto);
+  }
+
+  @Patch('password')
+  async updatePassword(@GetUser() user, @Body() dto: UpdatePasswordDto) {
+    return await this.userService.updatePassword(user.uuid, dto);
   }
 }

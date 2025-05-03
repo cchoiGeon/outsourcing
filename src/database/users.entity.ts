@@ -20,6 +20,9 @@ export class User {
   @Column()
   phoneNumber: string;
 
+  @Column({ nullable: true })
+  university: string;
+
   @Column({ type: 'enum', enum: Role, default: Role.CUSTOMER })
   role: Role;
 
