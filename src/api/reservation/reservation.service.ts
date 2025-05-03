@@ -8,7 +8,7 @@ import { VerificationStatus } from 'src/common/enum/status.enum';
 import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto';
 import { Notification } from 'src/database/notification.entity';
 import { Inventory } from 'src/database/inventory.entity';
-
+import { ReservationStatus } from 'src/common/enum/reservation-status.enum';
 @Injectable()
 export class ReservationService {
   constructor(
@@ -32,13 +32,19 @@ export class ReservationService {
       user: { uuid: userUuid },
     });
   
-    const notification = this.notificationRepository.create({
+    const storeOwnerNotification = this.notificationRepository.create({
       title: '예약 요청이 왔습니다.',
       content: '예약 요청이 왔습니다.',
       user: { uuid: storeOwnerUuid },
     });
+    await this.notificationRepository.save(storeOwnerNotification);
 
-    await this.notificationRepository.save(notification);
+    const customerNotification = this.notificationRepository.create({
+      title: '예약이 완료되었습니다.',
+      content: '예약이 완료되었습니다.',
+      user: { uuid: userUuid },
+    });
+    await this.notificationRepository.save(customerNotification);
 
     return await this.reservationRepository.save(reservation);
   }
@@ -102,11 +108,21 @@ export class ReservationService {
   async updateReservationStatus(reservationId: number, dto: UpdateReservationStatusDto) {
     const reservation = await this.reservationRepository.findOne({
       where: { id: reservationId },
+      relations: ['user']
     });
     if (!reservation) {
       throw new NotFoundException('Reservation not found');
     }
     reservation.status = dto.status;
-    return await this.reservationRepository.save(reservation);
+    await this.reservationRepository.save(reservation);
+
+    const storeOwnerNotification = this.notificationRepository.create({
+      title: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 완료되었습니다.',
+      content: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 완료되었습니다.',
+      user: { uuid: reservation.user.uuid },
+    });
+    await this.notificationRepository.save(storeOwnerNotification);
+
+    return reservation;
   }
 }
