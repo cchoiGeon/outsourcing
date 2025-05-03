@@ -108,13 +108,21 @@ export class ReservationService {
   async updateReservationStatus(reservationId: number, dto: UpdateReservationStatusDto) {
     const reservation = await this.reservationRepository.findOne({
       where: { id: reservationId },
-      relations: ['user']
+      relations: ['user', 'inventory']
     });
     if (!reservation) {
       throw new NotFoundException('Reservation not found');
     }
     reservation.status = dto.status;
     await this.reservationRepository.save(reservation);
+
+    if (dto.status === ReservationStatus.COMPLETED) {
+      const inventory = await this.inventoryRepository.findOne({
+        where: { id: reservation.inventory.id },
+      });
+      inventory.quantity -= reservation.amount;
+      await this.inventoryRepository.save(inventory);
+    }
 
     const storeOwnerNotification = this.notificationRepository.create({
       title: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 완료되었습니다.',
