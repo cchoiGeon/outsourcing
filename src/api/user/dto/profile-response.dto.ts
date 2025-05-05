@@ -6,4 +6,5 @@ export class ProfileResponseDto {
   phoneNumber: string;
   role: Role;
   university: string;
+  isAdmin: boolean;
 }

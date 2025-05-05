@@ -24,6 +24,7 @@ export class UserService {
       name: user.name,
       phoneNumber: user.phoneNumber,
       university: user.university,
+      isAdmin: user.isAdmin,
     };
   }
 
