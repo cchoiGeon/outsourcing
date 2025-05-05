@@ -1,10 +1,8 @@
-import { Role } from "src/common/enum/role.enum";
-
 export class ProfileResponseDto {
   name: string;
   email: string;
   phoneNumber: string;
-  role: Role;
+  role: string;
   university: string;
   isAdmin: boolean;
 }

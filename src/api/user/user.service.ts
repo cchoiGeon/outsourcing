@@ -17,9 +17,9 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('사용자를 찾을 수 없습니다.');
     }
-
+    const userRole = user.isAdmin ? "ADMIN" : user.role;
     return {
-      role: user.role,
+      role: userRole,
       email: user.email,
       name: user.name,
       phoneNumber: user.phoneNumber,
