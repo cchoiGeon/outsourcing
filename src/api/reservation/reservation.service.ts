@@ -40,8 +40,8 @@ export class ReservationService {
     await this.notificationRepository.save(storeOwnerNotification);
 
     const customerNotification = this.notificationRepository.create({
-      title: '예약이 완료되었습니다.',
-      content: '예약이 완료되었습니다.',
+      title: '예약이 신청되었습니다.',
+      content: '예약이 신청되었습니다.',
       user: { uuid: userUuid },
     });
     await this.notificationRepository.save(customerNotification);
@@ -125,8 +125,8 @@ export class ReservationService {
     }
 
     const storeOwnerNotification = this.notificationRepository.create({
-      title: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 완료되었습니다.',
-      content: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 완료되었습니다.',
+      title: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 확정되었습니다.',
+      content: dto.status === ReservationStatus.REJECTED ? '예약이 거절되었습니다.' : '예약이 되었습니다.',
       user: { uuid: reservation.user.uuid },
     });
     await this.notificationRepository.save(storeOwnerNotification);
