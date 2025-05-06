@@ -71,9 +71,9 @@ export class ReservationService {
   }
 
   async getTodayReservationsByStoreOwner(userUuid: string) {
-    const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    // const today = new Date();
+    // const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    // const endOfDay = new Date(today.setHours(23, 59, 59, 999));
     const ownerStore = await this.storeOwnerProfileRepository.findOne({
       where: { user: { uuid: userUuid } },
       relations: ['store'],
@@ -81,17 +81,15 @@ export class ReservationService {
     if (!ownerStore) {
       throw new NotFoundException('Store owner profile not found');
     }
-    if (ownerStore.store.verificationStatus !== VerificationStatus.APPROVED) {
-      throw new NotFoundException('Store owner profile not verified');
-    }
 
     const storeId = ownerStore.store.id;
     
     const result = await this.reservationRepository.find({
       where: {
         inventory: { store: { id: storeId } },
-        createdAt: Between(startOfDay, endOfDay),
+        // createdAt: Between(startOfDay, endOfDay),
       },
+      order: { createdAt: 'DESC' },
       relations: ['user'],
     }); 
   
