@@ -50,15 +50,30 @@ export class InventoryService {
 
   async getTodayInventory() {
     const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    // const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    // const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    const now = new Date();
     
     const inventory = await this.inventoryRepository.find({
       where: {
-        createdAt: Between(startOfDay, endOfDay),
+        endTime: MoreThan(now)
       },
+      relations: ['store', 'store.category']
     });
-    return inventory;
+    return inventory.map(inventory => ({
+      inventory: {
+        id: inventory.id,
+        name: inventory.name,
+        price: inventory.price,
+        imageUrl: inventory.imageUrl, 
+        startTime: inventory.startTime,
+        endTime: inventory.endTime,
+      },
+      store: {
+        name: inventory.store.name,
+        category: inventory.store.category.categoryName
+      } 
+    }));
   }
 
   async getInventoryByInventId(inventId: number) {
