@@ -92,7 +92,7 @@ export class ReservationService {
         inventory: { store: { id: storeId } },
         createdAt: Between(startOfDay, endOfDay),
       },
-      relations: ['user', 'user.profile'],
+      relations: ['user'],
     }); 
   
     return result.map((reservation) => ({
