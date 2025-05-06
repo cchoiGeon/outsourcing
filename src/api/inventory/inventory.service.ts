@@ -65,6 +65,7 @@ export class InventoryService {
         id: inventory.id,
         name: inventory.name,
         price: inventory.price,
+        quantity: inventory.quantity,
         imageUrl: inventory.imageUrl, 
         startTime: inventory.startTime,
         endTime: inventory.endTime,
