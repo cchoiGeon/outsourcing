@@ -29,8 +29,8 @@ export class InventoryController {
   }
 
   @Get('/')
-  async getTodayInventory() {
-    return await this.inventoryService.getTodayInventory();
+  async getTodayInventory(@GetUser() user) {
+    return await this.inventoryService.getTodayInventory(user.uuid);
   }
 
   @Get('/:inventId')

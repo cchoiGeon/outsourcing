@@ -7,6 +7,8 @@ import { Store } from 'src/database/store.entity';
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { AwsService } from '../aws/aws.service';
 import { StoreOwnerProfile } from 'src/database/store-owner-profile.entity';
+import { User } from 'src/database/users.entity'; 
+import { Role } from 'src/common/enum/role.enum';
 
 @Injectable()
 export class InventoryService {
@@ -17,6 +19,8 @@ export class InventoryService {
     private readonly storeRepository: Repository<Store>,
     @InjectRepository(StoreOwnerProfile)
     private readonly storeOwnerProfileRepository: Repository<StoreOwnerProfile>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly awsService: AwsService,
   ) {}
 
@@ -48,33 +52,62 @@ export class InventoryService {
     return await this.inventoryRepository.save(inventory);  
   }
 
-  async getTodayInventory() {
-    const today = new Date();
-    // const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    // const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+  async getTodayInventory(userUuid: string) {
     const now = new Date();
-    
-    const inventory = await this.inventoryRepository.find({
-      where: {
-        endTime: MoreThan(now)
-      },
-      relations: ['store', 'store.category']
-    });
-    return inventory.map(inventory => ({
-      inventory: {
-        id: inventory.id,
-        name: inventory.name,
-        price: inventory.price,
-        quantity: inventory.quantity,
-        imageUrl: inventory.imageUrl, 
-        startTime: inventory.startTime,
-        endTime: inventory.endTime,
-      },
-      store: {
-        name: inventory.store.name,
-        category: inventory.store.category.categoryName
-      } 
-    }));
+    const user = await this.userRepository.findOne({ where: { uuid: userUuid } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (user.role === Role.STORE_OWNER) {
+      const storeOwner = await this.storeOwnerProfileRepository.findOne({ where: { user: { uuid: userUuid } }, relations: ['store'] });
+      if (!storeOwner) {
+        throw new NotFoundException('Store owner not found');
+      }
+      const inventory = await this.inventoryRepository.find({
+        where: {
+          store: { id: storeOwner.store.id },
+          endTime: MoreThan(now)
+        },
+        relations: ['store', 'store.category']
+      });
+      return inventory.map(inventory => ({
+        inventory: {
+          id: inventory.id,
+          name: inventory.name,
+          price: inventory.price,
+          quantity: inventory.quantity, 
+          imageUrl: inventory.imageUrl,
+          startTime: inventory.startTime,
+          endTime: inventory.endTime,
+        },
+        store: {
+          name: inventory.store.name,
+          category: inventory.store.category.categoryName
+        }
+      }));
+    } else {
+      const inventory = await this.inventoryRepository.find({
+        where: {
+          endTime: MoreThan(now)
+        },
+        relations: ['store', 'store.category']
+      });
+      return inventory.map(inventory => ({
+        inventory: {
+          id: inventory.id,
+          name: inventory.name,
+          price: inventory.price,
+          quantity: inventory.quantity,
+          imageUrl: inventory.imageUrl,
+          startTime: inventory.startTime,
+          endTime: inventory.endTime,
+        },
+        store: {
+          name: inventory.store.name,
+          category: inventory.store.category.categoryName
+        }
+      }));
+    }
   }
 
   async getInventoryByInventId(inventId: number) {
