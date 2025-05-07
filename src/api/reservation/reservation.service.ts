@@ -90,7 +90,7 @@ export class ReservationService {
         // createdAt: Between(startOfDay, endOfDay),
       },
       order: { createdAt: 'DESC' },
-      relations: ['user'],
+      relations: ['user','inventory'],
     }); 
   
     return result.map((reservation) => ({
@@ -100,6 +100,9 @@ export class ReservationService {
       pickUpTime: reservation.pickUpTime,
       status: reservation.status,
       createdAt: reservation.createdAt,
+      inventoryName: reservation.inventory.name,
+      inventoryPrice: reservation.inventory.price,
+      inventoryImage: reservation.inventory.imageUrl,
     }));
   }
 
