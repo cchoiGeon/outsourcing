@@ -33,6 +33,9 @@ export class Store {
   @Column({ nullable: true })
   phoneNumber?: string;
 
+  @Column()
+  siteUrl: string
+
   @Column({ nullable: true })
   verificationPhoto?: string;
 

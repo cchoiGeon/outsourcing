@@ -42,6 +42,7 @@ export class StoreService {
       name: store.name,
       address: store.address,
       imageUrl: store.imageUrl,
+      siteUrl: store.storeSiteUrl,
       category: {
         id: store.category.id,
         name: store.category.categoryName,
