@@ -46,6 +46,8 @@ export class InventoryService {
 
     const inventory = this.inventoryRepository.create({
       ...dto,
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
       store: store
     });
 

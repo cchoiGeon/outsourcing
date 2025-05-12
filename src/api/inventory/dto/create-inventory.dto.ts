@@ -20,12 +20,4 @@ export class CreateInventoryDto {
   @IsString()
   @IsOptional()
   imageUrl?: string;
-
-  @IsString()
-  @IsNotEmpty()
-  startTime: string; // ISO 문자열로 받음
-
-  @IsString()
-  @IsNotEmpty()
-  endTime: string; // ISO 문자열로 받음
 } 

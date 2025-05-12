@@ -40,8 +40,8 @@ export class ReservationService {
     await this.notificationRepository.save(storeOwnerNotification);
 
     const customerNotification = this.notificationRepository.create({
-      title: '예약이 신청되었습니다.',
-      content: '예약이 신청되었습니다.',
+      title: '예약 신청! 상품 예약 신청이 완료되었습니다.',
+      content: '예약 신청! 상품 예약 신청이 완료되었습니다.',
       user: { uuid: userUuid },
     });
     await this.notificationRepository.save(customerNotification);
