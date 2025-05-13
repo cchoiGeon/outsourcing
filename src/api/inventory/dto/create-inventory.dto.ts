@@ -23,6 +23,14 @@ export class CreateInventoryDto {
   @IsString()
   @IsOptional()
   imageUrl?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
+
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
 } 
 
 export class UpdateInventoryDto {
