@@ -117,7 +117,7 @@ export class ReservationService {
     reservation.status = dto.status;
     await this.reservationRepository.save(reservation);
 
-    if (dto.status === ReservationStatus.COMPLETED) {
+    if (dto.status === ReservationStatus.CONFIRMED) {
       const inventory = await this.inventoryRepository.findOne({
         where: { id: reservation.inventory.id },
       });
