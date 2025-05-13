@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inventory } from 'src/database/inventory.entity';
 import { Between, MoreThan, Repository } from 'typeorm';
-import { CreateInventoryDto } from './dto/create-inventory.dto';
+import { CreateInventoryDto, UpdateInventoryDto } from './dto/create-inventory.dto';
 import { Store } from 'src/database/store.entity';
 import { VerificationStatus } from 'src/common/enum/status.enum';
 import { AwsService } from '../aws/aws.service';
@@ -23,6 +23,33 @@ export class InventoryService {
     private readonly userRepository: Repository<User>,
     private readonly awsService: AwsService,
   ) {}
+
+  async deleteInventory(inventId: number, userUuid: string) {
+    const inventory = await this.inventoryRepository.findOne({ where: { id: inventId }, relations: ['store', 'store.storeOwnerProfiles'] });
+    if (!inventory) {
+      throw new NotFoundException('Inventory not found');
+    }
+
+    if (!inventory.store.storeOwnerProfiles.some(profile => profile.user.uuid === userUuid)) {
+      throw new BadRequestException('You are not the owner of this inventory');
+    }
+
+    await this.inventoryRepository.delete(inventId);
+  }
+
+  async updateInventory(inventId: number, dto: UpdateInventoryDto, userUuid: string) {
+    const inventory = await this.inventoryRepository.findOne({ where: { id: inventId }, relations: ['store', 'store.storeOwnerProfiles'] });
+    if (!inventory) {
+      throw new NotFoundException('Inventory not found');
+    }
+
+    if (!inventory.store.storeOwnerProfiles.some(profile => profile.user.uuid === userUuid)) {
+      throw new BadRequestException('You are not the owner of this inventory');
+    }
+
+    inventory.quantity = dto.quantity;
+    return await this.inventoryRepository.save(inventory);
+  }
 
   async createInventory( uuid: string, dto: CreateInventoryDto, file?: Express.Multer.File) {
     const user = await this.storeOwnerProfileRepository.findOne({ where: { user: { uuid: uuid } }, relations: ['store'] });

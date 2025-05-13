@@ -21,3 +21,9 @@ export class CreateInventoryDto {
   @IsOptional()
   imageUrl?: string;
 } 
+
+export class UpdateInventoryDto {
+  @IsNumber()
+  @IsNotEmpty()
+  quantity: number;
+}
