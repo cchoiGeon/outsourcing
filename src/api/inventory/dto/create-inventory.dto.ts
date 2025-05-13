@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateInventoryDto {
   @IsString()
@@ -11,10 +12,12 @@ export class CreateInventoryDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
   price: number;
 
   @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
   quantity: number;
 
   @IsString()
@@ -25,5 +28,6 @@ export class CreateInventoryDto {
 export class UpdateInventoryDto {
   @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
   quantity: number;
 }
