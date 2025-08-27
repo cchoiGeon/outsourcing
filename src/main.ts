@@ -18,6 +18,8 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, isProd ? { httpsOptions } : undefined);
   const logger = app.get(LoggerService);
+
+  console.log(httpsOptions);
   
   // CORS 설정 추가
   app.enableCors({
